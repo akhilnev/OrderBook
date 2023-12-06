@@ -3,6 +3,9 @@
 #include "OrderBook.hpp"
 #include <iostream>
 
+
+using namespace std;
+
 std::string TICKER = "GOOGL"; // Say we are making this ticker to trade for a dummy google stock
 
 void OrderBook::flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price) {
@@ -17,13 +20,55 @@ double OrderBook::fillOrders(const std::string& side, double price, double quant
 }
 
 OrderBook::OrderBook() {
-    // Initialize your order book as needed
-    
+    // Implementation of OrderBook constructor
+
+    // Creating a couple of market maker users with predefined balances and bids/asks
+    Balances balance1("USD", 10000);
+    balance1.addBalance(TICKER, 1000);
+    User marketMaker1("MarketMaker1", balance1); // User is made 
+    users["MarketMaker1"] = marketMaker1;    // Adding bids and asks for market makers
+
+    Order bid1("MarketMaker1", "bid", 110, 10);
+    Order ask1("MarketMaker1", "ask", 115, 5);
+    Order bid2("MarketMaker2", "bid", 111, 8);
+    Order ask2("MarketMaker2", "ask", 119, 12);
+
+    bids.push_back(bid1);
+    asks.push_back(ask1);
+    bids.push_back(bid2);
+    asks.push_back(ask2);
+
+    // Creating a couple of market maker users with predefined balances and bids/asks, with different balances to start maintaining liquidity in the order book
+    Balances balance2("USD", 10000);
+    balance2.addBalance(TICKER, 2000);
+    User marketMaker2("MarketMaker2", balance2); // User is made
+    users["MarketMaker2"] = marketMaker2;    // Adding bids and asks for market makers
+    Order bid3("MarketMaker2", "bid", 109, 10);
+    Order ask3("MarketMaker2", "ask", 125, 5);
+    Order bid4("MarketMaker2", "bid", 112, 8);
+    Order ask4("MarketMaker2", "ask", 120, 12);
+
+    bids.push_back(bid3);
+    asks.push_back(ask3);
+    bids.push_back(bid4);
+    asks.push_back(ask4);
+
+
+    // Creating user 3 with predefined balances and bids/asks
+    // market maker 3 has a lot of USD and wants to buy GOOGL
+    Balances balance3("USD", 50000);
+    balance3.addBalance(TICKER, 0);
+    User marketMaker3("MarketMaker3", balance3); // User is made
+    users["MarketMaker3"] = marketMaker3;    // Adding bids and asks for market makers
+    Order bid5("MarketMaker3", "bid", 105, 10);
+    Order bid5("MarketMaker3", "bid", 108, 10);
+    bids.push_back(bid5);
 }
 
-OrderBook::~OrderBook() {
-    // Cleanup tasks go here
-    // For example, deallocate any dynamically allocated memory or close file handles
+std:: string OrderBook :: makeUser(std::string Username){
+    User user(Username);
+    cout << "User created successfully";
+    return "WORKS";
 }
 
 std::string OrderBook::add_bid(Order bid, User user) {
@@ -38,16 +83,40 @@ std::string OrderBook::add_ask(Order ask, User user) {
     return "Ask added successfully."; // Placeholder, adjust return type as needed
 }
 
-std::string OrderBook::getBalance(User username) {
-    // Implementation of getBalance
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
-    return "Balance retrieved successfully."; // Placeholder, adjust return type as needed
+std::string OrderBook::getBalance(std::string username) {
+    // Check if username exists is users array if it does we cout the balances else we return an error message saying user not found
+    if(users.find(username) != users.end()){
+        cout << "User found" << endl;
+        cout << "User balance is as follows: " << endl;
+        // Balance is a map of string and int so we need to iterate through the map to get the values
+        for(auto it = users[username].user_balance.balance.begin(); it != users[username].user_balance.balance.end(); ++it){
+           // Print key : value format
+              cout << it->first << " : " << it->second << endl;
+        }
+        return "Balance retrieved successfully.";
+    }else{
+        cout << "User not found!!" << endl;
+        return "User not found";
+    }
 }
 
-std::string OrderBook::getQuote() {
+std::string OrderBook::getQuote(int qty) {
     // Implementation of getQuote
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
-    return "Quote retrieved successfully."; // Placeholder, adjust return type as needed
+    // We will need to find lowest ask prices till the qty passed in is met we keep displaying lowest ask prices
+
+    for(auto it = asks.begin(); it != asks.end(); ++it){
+        if(qty > 0 && qty <= it->quantity){
+            cout << TICKER << "-> " << "Quantity available: " << qty << "at" << it->price <<  endl;
+            return "Quote retrieved successfully.";
+        }else if (qty > 0 && qty > it->quantity){
+            cout << TICKER << "-> " << "Quantity available: " << it->quantity << "at" << it->price <<  endl;
+            qty -= it->quantity;
+    }else {
+        return "Quote retrieved successfully.";
+    }
+   
+}
+    return "Quote retrieved successfully."; 
 }
 
 std::string OrderBook::getDepth() {
