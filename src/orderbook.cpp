@@ -9,9 +9,29 @@ using namespace std;
 
 std::string TICKER = "GOOGL"; // Say we are making this ticker to trade for a dummy google stock
 
+// BIDDER , ASKER , PRICE , QUANTITY
 void OrderBook::flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price) {
     // Implementation of flipBalance
     // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
+    // We need to check if the user exists in the users array if it does we can proceed to flip the balances else we return an error message
+    if(users.find(userId1) != users.end() && users.find(userId2) != users.end()){
+        // We need to check if the user has enough balance to buy the stock if it does we proceed to flip the balances else we return an error message
+        if(users[userId1].user_balance.balance["USD"] >= price * quantity){
+            // We need to check if the user has enough balance to sell the stock if it does we proceed to flip the balances else we return an error message
+            if(users[userId2].user_balance.balance[TICKER] >= quantity){
+                // We flip the balances
+                users[userId1].user_balance.balance["USD"] -= price * quantity;
+                users[userId1].user_balance.balance[TICKER] += quantity;
+                users[userId2].user_balance.balance["USD"] += price * quantity;
+                users[userId2].user_balance.balance[TICKER] -= quantity;
+                cout << "Balances flipped successfully" << endl;
+            }else{
+                cout << "User does not have enough balance to sell the stock" << endl;
+            }
+        }else{
+            cout << "User does not have enough balance to buy the stock" << endl;
+        }
+}
 }
 
 double OrderBook::fillOrders(const std::string& side, double price, double quantity, const std::string& userId) {
@@ -68,23 +88,31 @@ OrderBook::OrderBook() {
 
 std:: string OrderBook :: makeUser(std::string Username){
     User user(Username);
-    cout << "User created successfully";
-    return "WORKS";
+    cout << "User created successfully" << endl;
+    return "User created successfully";
 }
 
-std::string OrderBook::add_bid(Order bid, User user) {
+
+
+std::string OrderBook::add_bid(std :: string Username, int Price, int Quantity) {
     // Implementation of add_bid
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
+    // We need to check if the username exists in the users array, then we compare the value of the bid with the lowest ask price, if bid is higher or equal to ask then we start flipping balances and traversing through ask array and bid quantity till condition is false, then if remQty > 0 
+    //we add the remaining quantity to the bids array else we return a message saying Bid Satisfied Successfully
+    int remQty = Quantity;
+    //sort asks in ascending order of price
+    std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
+        return a.price < b.price;
+    });
+    // CONTNUE FROM HERE
+
     return "Bid added successfully."; // Placeholder, adjust return type as needed
 }
 
-std::string OrderBook::add_ask(Order ask, User user) {
+std::string OrderBook::add_ask(std :: string Username, int Price, int Quantity) {
     // Implementation of add_ask
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
+
     return "Ask added successfully."; // Placeholder, adjust return type as needed
 }
-
-
 
 
 // DONE 

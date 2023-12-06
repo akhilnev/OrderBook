@@ -75,8 +75,8 @@ private:
     public:
     OrderBook(); // constructor
    ~OrderBook();
-    std:: string add_bid(Order bid, User user); // adds a bid or ask to the order book
-    std:: string add_ask(Order ask, User user); // adds a bid or ask to the order book
+    std:: string add_bid(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
+    std:: string add_ask(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
     std:: string getBalance(std::string username); // returns the balance of a user
     std:: string getQuote(int qty); // returns the best bid and ask prices and quantities
     std:: string getDepth(); // returns the entire order book and shows all bids and asks
