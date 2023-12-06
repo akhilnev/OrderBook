@@ -1,3 +1,0 @@
-/Users/akhileshnevatia/OrderBook/build/CMakeFiles/order_book.dir
-/Users/akhileshnevatia/OrderBook/build/CMakeFiles/edit_cache.dir
-/Users/akhileshnevatia/OrderBook/build/CMakeFiles/rebuild_cache.dir
