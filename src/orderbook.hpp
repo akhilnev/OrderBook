@@ -1,4 +1,4 @@
-#pragma once // what Does this do ?  --> https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files
+ // what Does this do ?  --> https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files
 
 #ifndef ORDERBOOK_HPP
 #define ORDERBOOK_HPP
@@ -34,6 +34,9 @@ struct Balances{
 struct User{
     std :: string user_name;
     Balances user_balance;
+
+    User(){};
+    
     User(std::string Username, Balances b){
         user_name = Username;
         user_balance = b;
@@ -70,11 +73,10 @@ private:
     std :: vector<Order> asks;
     std :: unordered_map <std :: string,User> users; // stores unique user name and balances for each user
     void flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price);
-    double fillOrders(const std::string& side, double price, double quantity, const std::string& userId);
 
     public:
     OrderBook(); // constructor
-   ~OrderBook();
+   ~OrderBook(); // destructor
     std:: string add_bid(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
     std:: string add_ask(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
     std:: string getBalance(std::string username); // returns the balance of a user

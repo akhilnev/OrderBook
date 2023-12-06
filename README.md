@@ -1,2 +1,2 @@
 # OrderBook
-- Trying something new by making my own simple order book in C++ 
+- Trying something new By Making my Own simple Order-Book in C++ 

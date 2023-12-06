@@ -1,44 +1,35 @@
 // OrderBook.cpp
 
-#include "OrderBook.hpp"
+#include "orderbook.hpp"
 #include <iostream>
 #include <iomanip>  // For setw() and setfill()
 
 
 using namespace std;
 
-std::string TICKER = "GOOGL"; // Say we are making this ticker to trade for a dummy google stock
 
-// BIDDER , ASKER , PRICE , QUANTITY
+// BIDDER , ASKER ,  QUANTITY, PRICE 
 void OrderBook::flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price) {
-    // Implementation of flipBalance
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
-    // We need to check if the user exists in the users array if it does we can proceed to flip the balances else we return an error message
-    if(users.find(userId1) != users.end() && users.find(userId2) != users.end()){
-        // We need to check if the user has enough balance to buy the stock if it does we proceed to flip the balances else we return an error message
-        if(users[userId1].user_balance.balance["USD"] >= price * quantity){
-            // We need to check if the user has enough balance to sell the stock if it does we proceed to flip the balances else we return an error message
-            if(users[userId2].user_balance.balance[TICKER] >= quantity){
-                // We flip the balances
+    if (users.find(userId1) != users.end() && users.find(userId2) != users.end()) {
+        if (users[userId1].user_balance.balance["USD"] >= price * quantity) {
+            if (users[userId2].user_balance.balance[TICKER] >= quantity) {
                 users[userId1].user_balance.balance["USD"] -= price * quantity;
                 users[userId1].user_balance.balance[TICKER] += quantity;
                 users[userId2].user_balance.balance["USD"] += price * quantity;
                 users[userId2].user_balance.balance[TICKER] -= quantity;
                 cout << "Balances flipped successfully" << endl;
-            }else{
+            } else {
                 cout << "User does not have enough balance to sell the stock" << endl;
             }
-        }else{
+        } else {
             cout << "User does not have enough balance to buy the stock" << endl;
         }
-}
+    } else {
+        cout << "One or both users not found" << endl;
+    }
 }
 
-double OrderBook::fillOrders(const std::string& side, double price, double quantity, const std::string& userId) {
-    // Implementation of fillOrders
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
-    return 0.0; // Placeholder, adjust return type as needed
-}
+
 
 OrderBook::OrderBook() {
     // Implementation of OrderBook constructor
@@ -82,8 +73,9 @@ OrderBook::OrderBook() {
     User marketMaker3("MarketMaker3", balance3); // User is made
     users["MarketMaker3"] = marketMaker3;    // Adding bids and asks for market makers
     Order bid5("MarketMaker3", "bid", 105, 10);
-    Order bid5("MarketMaker3", "bid", 108, 10);
+    Order bid6("MarketMaker3", "bid", 108, 10);
     bids.push_back(bid5);
+    bids.push_back(bid6);
 }
 
 std:: string OrderBook :: makeUser(std::string Username){
@@ -91,6 +83,44 @@ std:: string OrderBook :: makeUser(std::string Username){
     cout << "User created successfully" << endl;
     return "User created successfully";
 }
+
+//REFFERENCE FUNCTION TO FILL ORDERS !
+// function fillOrders(side: string, price: number, quantity: number, userId: string): number {
+//   let remainingQuantity = quantity;
+//   if (side === "bid") {
+//     for (let i = asks.length - 1; i >= 0; i--) {
+//       if (asks[i].price > price) {
+//         continue;
+//       }
+//       if (asks[i].quantity > remainingQuantity) {
+//         asks[i].quantity -= remainingQuantity;
+//         flipBalance(asks[i].userId, userId, remainingQuantity, asks[i].price);
+//         return 0;
+//       } else {
+//         remainingQuantity -= asks[i].quantity;
+//         flipBalance(asks[i].userId, userId, asks[i].quantity, asks[i].price);
+//         asks.pop();
+//       }
+//     }
+//   } else {
+//     for (let i = bids.length - 1; i >= 0; i--) {
+//       if (bids[i].price < price) {
+//         continue;
+//       }
+//       if (bids[i].quantity > remainingQuantity) {
+//         bids[i].quantity -= remainingQuantity;
+//         flipBalance(userId, bids[i].userId, remainingQuantity, price);
+//         return 0;
+//       } else {
+//         remainingQuantity -= bids[i].quantity;
+//         flipBalance(userId, bids[i].userId, bids[i].quantity, price);
+//         bids.pop();
+//       }
+//     }
+//   }
+
+//   return remainingQuantity;
+// }
 
 
 
@@ -103,14 +133,72 @@ std::string OrderBook::add_bid(std :: string Username, int Price, int Quantity) 
     std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
         return a.price < b.price;
     });
-    // CONTNUE FROM HERE
+    //use logic from the commeneted function above 
+    for(auto it = asks.begin(); it != asks.end(); ++it){
+        if(remQty > 0 && Price >= it->price){
 
-    return "Bid added successfully."; // Placeholder, adjust return type as needed
+            if(it->quantity > remQty){
+                it->quantity -= remQty;
+                flipBalance(Username, it->user_name, remQty, it->price);
+                cout << "Bid Satisfied Successfully at price: " << it->price << "and quantity: " << remQty  << endl;
+            }else{
+                remQty -= it->quantity;
+                flipBalance( Username, it->user_name, it->quantity, it->price);
+                asks.erase(it);
+                cout << "Bid Satisfied Partially at price: " << it->price << "and quantity: " << remQty  << endl;
+            }
+        }
+    }
+
+    if(remQty > 0){
+        Order bid(Username, "bid", Price, remQty);
+        bids.push_back(bid);
+        cout << "Remaining quantity of bids added to Orderbook" << endl;
+    }
+
+    if(remQty == 0){
+        cout << "Complete Bid Satisfied Successfully" << endl;
+    }
+
+    return "Bid added/satified successfully."; // Placeholder, adjust return type as needed
 }
 
 std::string OrderBook::add_ask(std :: string Username, int Price, int Quantity) {
     // Implementation of add_ask
+    // Similar to the add_bid function we need to check if the username exists in the users array, then we compare the value of the ask with the highest bid price, if ask is lower or equal to bid then we start flipping balances and traversing through bid array and ask quantity till condition is false, then if remQty > 0
+    //we add the remaining quantity to the asks array else we return a message saying Ask Satisfied Successfully
 
+    int remQty = Quantity;
+    //sort bids in descending order of price
+    std::sort(bids.begin(), bids.end(), [](const Order& a, const Order& b) {
+        return a.price > b.price;
+    });
+    //use logic from the commeneted function above
+    for(auto it = bids.begin(); it != bids.end(); ++it){
+        if(remQty > 0 && Price <= it->price){
+
+            if(it->quantity > remQty){
+                it->quantity -= remQty;
+                flipBalance(it->user_name, Username, remQty, it->price);
+                cout << "Ask Satisfied Successfully at price: " << it->price << "and quantity: " << remQty  << endl;
+            }else{
+                remQty -= it->quantity;
+                flipBalance(it->user_name, Username, it->quantity, it->price);
+                bids.erase(it);
+                cout << "Ask Satisfied Partially at price: " << it->price << "and quantity: " << remQty  << endl;
+            }
+        }
+    }
+
+    if(remQty > 0){
+        Order ask(Username, "ask", Price, remQty);
+        asks.push_back(ask);
+        cout << "Remaining quantity of asks added to Orderbook" << endl;
+    }
+
+    if(remQty == 0){
+        cout << "Complete Ask Satisfied Successfully" << endl;
+    }
     return "Ask added successfully."; // Placeholder, adjust return type as needed
 }
 
@@ -185,4 +273,17 @@ std::string OrderBook::getDepth() {
 
     cout << depthString << endl;
     return depthString;
+}
+
+OrderBook::~OrderBook() {
+    // Implementation of the destructor, if needed
+    // For example, you might need to release any allocated resources here
+}
+
+
+int main(){
+
+    OrderBook EXCH;
+    EXCH.getDepth();
+
 }
