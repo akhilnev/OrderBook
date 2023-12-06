@@ -2,6 +2,7 @@
 
 #include "OrderBook.hpp"
 #include <iostream>
+#include <iomanip>  // For setw() and setfill()
 
 
 using namespace std;
@@ -83,6 +84,10 @@ std::string OrderBook::add_ask(Order ask, User user) {
     return "Ask added successfully."; // Placeholder, adjust return type as needed
 }
 
+
+
+
+// DONE 
 std::string OrderBook::getBalance(std::string username) {
     // Check if username exists is users array if it does we cout the balances else we return an error message saying user not found
     if(users.find(username) != users.end()){
@@ -100,6 +105,9 @@ std::string OrderBook::getBalance(std::string username) {
     }
 }
 
+
+
+// DONE 
 std::string OrderBook::getQuote(int qty) {
     // Implementation of getQuote
     // We will need to find lowest ask prices till the qty passed in is met we keep displaying lowest ask prices
@@ -119,8 +127,34 @@ std::string OrderBook::getQuote(int qty) {
     return "Quote retrieved successfully."; 
 }
 
+
+// DONE
 std::string OrderBook::getDepth() {
-    // Implementation of getDepth
-    // This function is not defined in the provided header file, so you need to provide its implementation based on your requirements.
-    return "Depth retrieved successfully."; // Placeholder, adjust return type as needed
+    // Sort asks in descending order of price
+    std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
+        return a.price > b.price;
+    });
+
+    // Sort bids in descending order of price
+    std::sort(bids.begin(), bids.end(), [](const Order& a, const Order& b) {
+        return a.price > b.price;
+    });
+
+    // Construct a string representation of the depth
+    std::string depthString = "Asks:\n";
+    for (const auto& ask : asks) {
+        depthString += "\x1b[31m";  // Set color to red
+        depthString += "Price: " + std::to_string(ask.price) + ", Quantity: " + std::to_string(ask.quantity) + "\n";
+        depthString += "\x1b[0m";   // Reset color to default
+    }
+
+    depthString += "Bids:\n";
+    for (const auto& bid : bids) {
+        depthString += "\x1b[32m";  // Set color to green
+        depthString += "Price: " + std::to_string(bid.price) + ", Quantity: " + std::to_string(bid.quantity) + "\n";
+        depthString += "\x1b[0m";   // Reset color to default
+    }
+
+    cout << depthString << endl;
+    return depthString;
 }
