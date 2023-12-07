@@ -2,43 +2,50 @@
 
 #include "orderbook.hpp"
 #include <iostream>
-#include <iomanip>  // For setw() and setfill()
-
+#include <iomanip> // For setw() and setfill()
 
 using namespace std;
 
-
-// BIDDER , ASKER ,  QUANTITY, PRICE 
-void OrderBook::flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price) {
-    if (users.find(userId1) != users.end() && users.find(userId2) != users.end()) {
-        if (users[userId1].user_balance.balance["USD"] >= price * quantity) {
-            if (users[userId2].user_balance.balance[TICKER] >= quantity) {
+// BIDDER , ASKER ,  QUANTITY, PRICE
+void OrderBook::flipBalance(const std::string &userId1, const std::string &userId2, double quantity, double price)
+{
+    if (users.find(userId1) != users.end() && users.find(userId2) != users.end())
+    {
+        if (users[userId1].user_balance.balance["USD"] >= price * quantity)
+        {
+            if (users[userId2].user_balance.balance[TICKER] >= quantity)
+            {
                 users[userId1].user_balance.balance["USD"] -= price * quantity;
                 users[userId1].user_balance.balance[TICKER] += quantity;
                 users[userId2].user_balance.balance["USD"] += price * quantity;
                 users[userId2].user_balance.balance[TICKER] -= quantity;
                 cout << "Funds and stocks transfered!" << endl;
-            } else {
+            }
+            else
+            {
                 cout << "User does not have enough balance to sell the stock" << endl;
             }
-        } else {
+        }
+        else
+        {
             cout << "User does not have enough balance to buy the stock" << endl;
         }
-    } else {
+    }
+    else
+    {
         cout << "One or both users not found" << endl;
     }
 }
 
-
-
-OrderBook::OrderBook() {
+OrderBook::OrderBook()
+{
     // Implementation of OrderBook constructor
 
     // Creating a couple of market maker users with predefined balances and bids/asks
     Balances balance1("USD", 10000);
     balance1.addBalance(TICKER, 1000);
-    User marketMaker1("MarketMaker1", balance1); // User is made 
-    users["MarketMaker1"] = marketMaker1;    // Adding bids and asks for market makers
+    User marketMaker1("MarketMaker1", balance1); // User is made
+    users["MarketMaker1"] = marketMaker1;        // Adding bids and asks for market makers
 
     Order bid1("MarketMaker1", "bid", 110, 10);
     Order ask1("MarketMaker1", "ask", 115, 5);
@@ -54,7 +61,7 @@ OrderBook::OrderBook() {
     Balances balance2("USD", 10000);
     balance2.addBalance(TICKER, 2000);
     User marketMaker2("MarketMaker2", balance2); // User is made
-    users["MarketMaker2"] = marketMaker2;    // Adding bids and asks for market makers
+    users["MarketMaker2"] = marketMaker2;        // Adding bids and asks for market makers
     Order bid3("MarketMaker2", "bid", 109, 10);
     Order ask3("MarketMaker2", "ask", 125, 5);
     Order bid4("MarketMaker2", "bid", 112, 8);
@@ -65,236 +72,261 @@ OrderBook::OrderBook() {
     bids.push_back(bid4);
     asks.push_back(ask4);
 
-
     // Creating user 3 with predefined balances and bids/asks
     // market maker 3 has a lot of USD and wants to buy GOOGL
     Balances balance3("USD", 50000);
     balance3.addBalance(TICKER, 0);
     User marketMaker3("MarketMaker3", balance3); // User is made
-    users["MarketMaker3"] = marketMaker3;    // Adding bids and asks for market makers
+    users["MarketMaker3"] = marketMaker3;        // Adding bids and asks for market makers
     Order bid5("MarketMaker3", "bid", 105, 10);
     Order bid6("MarketMaker3", "bid", 108, 10);
     bids.push_back(bid5);
     bids.push_back(bid6);
 }
 
-std:: string OrderBook :: makeUser(std::string Username){
-    User user(Username); // create a user with default balance
+std::string OrderBook ::makeUser(std::string Username)
+{
+    User user(Username);    // create a user with default balance
     users[Username] = user; // add user to the users map
-    cout << "User: "<< Username << " created successfully " << endl;
+    cout << "User: " << Username << " created successfully " << endl;
     return "User created successfully";
 }
 
-//REFFERENCE FUNCTION TO FILL ORDERS !
-// function fillOrders(side: string, price: number, quantity: number, userId: string): number {
-//   let remainingQuantity = quantity;
-//   if (side === "bid") {
-//     for (let i = asks.length - 1; i >= 0; i--) {
-//       if (asks[i].price > price) {
-//         continue;
-//       }
-//       if (asks[i].quantity > remainingQuantity) {
-//         asks[i].quantity -= remainingQuantity;
-//         flipBalance(asks[i].userId, userId, remainingQuantity, asks[i].price);
-//         return 0;
-//       } else {
-//         remainingQuantity -= asks[i].quantity;
-//         flipBalance(asks[i].userId, userId, asks[i].quantity, asks[i].price);
-//         asks.pop();
-//       }
-//     }
-//   } else {
-//     for (let i = bids.length - 1; i >= 0; i--) {
-//       if (bids[i].price < price) {
-//         continue;
-//       }
-//       if (bids[i].quantity > remainingQuantity) {
-//         bids[i].quantity -= remainingQuantity;
-//         flipBalance(userId, bids[i].userId, remainingQuantity, price);
-//         return 0;
-//       } else {
-//         remainingQuantity -= bids[i].quantity;
-//         flipBalance(userId, bids[i].userId, bids[i].quantity, price);
-//         bids.pop();
-//       }
-//     }
-//   }
+// REFFERENCE FUNCTION TO FILL ORDERS !
+//  function fillOrders(side: string, price: number, quantity: number, userId: string): number {
+//    let remainingQuantity = quantity;
+//    if (side === "bid") {
+//      for (let i = asks.length - 1; i >= 0; i--) {
+//        if (asks[i].price > price) {
+//          continue;
+//        }
+//        if (asks[i].quantity > remainingQuantity) {
+//          asks[i].quantity -= remainingQuantity;
+//          flipBalance(asks[i].userId, userId, remainingQuantity, asks[i].price);
+//          return 0;
+//        } else {
+//          remainingQuantity -= asks[i].quantity;
+//          flipBalance(asks[i].userId, userId, asks[i].quantity, asks[i].price);
+//          asks.pop();
+//        }
+//      }
+//    } else {
+//      for (let i = bids.length - 1; i >= 0; i--) {
+//        if (bids[i].price < price) {
+//          continue;
+//        }
+//        if (bids[i].quantity > remainingQuantity) {
+//          bids[i].quantity -= remainingQuantity;
+//          flipBalance(userId, bids[i].userId, remainingQuantity, price);
+//          return 0;
+//        } else {
+//          remainingQuantity -= bids[i].quantity;
+//          flipBalance(userId, bids[i].userId, bids[i].quantity, price);
+//          bids.pop();
+//        }
+//      }
+//    }
 
 //   return remainingQuantity;
 // }
 
-
-
-std::string OrderBook::add_bid(std :: string Username, int Price, int Quantity) {
+std::string OrderBook::add_bid(std ::string Username, int Price, int Quantity)
+{
     // Implementation of add_bid
-    // We need to check if the username exists in the users array, then we compare the value of the bid with the lowest ask price, if bid is higher or equal to ask then we start flipping balances and traversing through ask array and bid quantity till condition is false, then if remQty > 0 
-    //we add the remaining quantity to the bids array else we return a message saying Bid Satisfied Successfully
+    // We need to check if the username exists in the users array, then we compare the value of the bid with the lowest ask price, if bid is higher or equal to ask then we start flipping balances and traversing through ask array and bid quantity till condition is false, then if remQty > 0
+    // we add the remaining quantity to the bids array else we return a message saying Bid Satisfied Successfully
     int remQty = Quantity;
-    //sort asks in ascending order of price
-    std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
-        return a.price < b.price;
-    });
+    // sort asks in ascending order of price
+    std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
+              { return a.price < b.price; });
 
-// use logic from the commented function above
-for (auto it = asks.begin(); it != asks.end(); /* no increment here */) {
-    if (remQty > 0 && Price >= it->price) {
-        if (it->quantity > remQty) {
-            it->quantity -= remQty;
-            flipBalance(Username, it->user_name, remQty, it->price);
-            cout << "Bid Satisfied Successfully at price: " << it->price << " and quantity: " << remQty << endl;
-            remQty = 0;
-            break;
-        } else {
-            remQty -= it->quantity;
-            flipBalance(Username, it->user_name, it->quantity, it->price);
-            cout << "Bid Satisfied Partially at price: " << it->price << " and quantity: " << it->quantity << endl;
-            it = asks.erase(it); // get the next valid iterator after erasing
+    // use logic from the commented function above
+    for (auto it = asks.begin(); it != asks.end(); /* no increment here */)
+    {
+        if (remQty > 0 && Price >= it->price)
+        {
+            if (it->quantity > remQty)
+            {
+                it->quantity -= remQty;
+                flipBalance(Username, it->user_name, remQty, it->price);
+                cout << "Bid Satisfied Successfully at price: " << it->price << " and quantity: " << remQty << endl;
+                remQty = 0;
+                break;
+            }
+            else
+            {
+                remQty -= it->quantity;
+                flipBalance(Username, it->user_name, it->quantity, it->price);
+                cout << "Bid Satisfied Partially at price: " << it->price << " and quantity: " << it->quantity << endl;
+                it = asks.erase(it); // get the next valid iterator after erasing
+            }
         }
-    } else {
-        ++it; // increment only when not erasing
+        else
+        {
+            ++it; // increment only when not erasing
+        }
     }
-}
 
-
-    if(remQty > 0){
+    if (remQty > 0)
+    {
         Order bid(Username, "bid", Price, remQty);
         bids.push_back(bid);
         cout << "Remaining quantity of bids added to Orderbook" << endl;
     }
 
-    if(remQty == 0){
+    if (remQty == 0)
+    {
         cout << "Complete Bid Satisfied Successfully" << endl;
     }
 
     return "Bid added/satified successfully."; // Placeholder, adjust return type as needed
 }
 
-std::string OrderBook::add_ask(std :: string Username, int Price, int Quantity) {
+std::string OrderBook::add_ask(std ::string Username, int Price, int Quantity)
+{
     // Implementation of add_ask
     // Similar to the add_bid function we need to check if the username exists in the users array, then we compare the value of the ask with the highest bid price, if ask is lower or equal to bid then we start flipping balances and traversing through bid array and ask quantity till condition is false, then if remQty > 0
-    //we add the remaining quantity to the asks array else we return a message saying Ask Satisfied Successfully
+    // we add the remaining quantity to the asks array else we return a message saying Ask Satisfied Successfully
 
     int remQty = Quantity;
-    //sort bids in descending order of price
-    std::sort(bids.begin(), bids.end(), [](const Order& a, const Order& b) {
-        return a.price > b.price;
-    });
-
+    // sort bids in descending order of price
+    std::sort(bids.begin(), bids.end(), [](const Order &a, const Order &b)
+              { return a.price > b.price; });
 
     // use logic from the commented function above
-for (auto it = bids.begin(); it != bids.end(); /* no increment here */) {
-    if (remQty > 0 && Price <= it->price) {
-        if (it->quantity > remQty) {
-            it->quantity -= remQty;
-            flipBalance(it->user_name, Username, remQty, it->price);
-            cout << "Ask Satisfied Successfully at price: " << it->price << " and quantity: " << remQty << endl;
-            remQty = 0;
-            break;
-        } else {
-            remQty -= it->quantity;
-            flipBalance(it->user_name, Username, it->quantity, it->price);
-            cout << "Ask Satisfied Partially at price: " << it->price << " and quantity: " << it->quantity << endl;
-             it = bids.erase(it); // get the next valid iterator after erasing
+    for (auto it = bids.begin(); it != bids.end(); /* no increment here */)
+    {
+        if (remQty > 0 && Price <= it->price)
+        {
+            if (it->quantity > remQty)
+            {
+                it->quantity -= remQty;
+                flipBalance(it->user_name, Username, remQty, it->price);
+                cout << "Ask Satisfied Successfully at price: " << it->price << " and quantity: " << remQty << endl;
+                remQty = 0;
+                break;
+            }
+            else
+            {
+                remQty -= it->quantity;
+                flipBalance(it->user_name, Username, it->quantity, it->price);
+                cout << "Ask Satisfied Partially at price: " << it->price << " and quantity: " << it->quantity << endl;
+                it = bids.erase(it); // get the next valid iterator after erasing
+            }
         }
-    } else {
-        it++; // increment only when not erasing
+        else
+        {
+            it++; // increment only when not erasing
+        }
     }
-}
 
-    if(remQty > 0){
+    if (remQty > 0)
+    {
         Order ask(Username, "ask", Price, remQty);
         asks.push_back(ask);
         cout << "Remaining quantity of asks added to Orderbook" << endl;
     }
 
-    if(remQty == 0){
+    if (remQty == 0)
+    {
         cout << "Complete Ask Satisfied Successfully" << endl;
     }
     return "Ask added successfully."; // Placeholder, adjust return type as needed
 }
 
-
-// DONE 
-std::string OrderBook::getBalance(std::string username) {
+// DONE
+std::string OrderBook::getBalance(std::string username)
+{
     // Check if username exists is users array if it does we cout the balances else we return an error message saying user not found
-    if(users.find(username) != users.end()){
+    if (users.find(username) != users.end())
+    {
         cout << "User found" << endl;
         cout << "User balance is as follows: " << endl;
         // Balance is a map of string and int so we need to iterate through the map to get the values
-        for(auto it = users[username].user_balance.balance.begin(); it != users[username].user_balance.balance.end(); ++it){
-           // Print key : value format
-              cout << it->first << " : " << it->second << endl;
+        for (auto it = users[username].user_balance.balance.begin(); it != users[username].user_balance.balance.end(); ++it)
+        {
+            // Print key : value format
+            cout << it->first << " : " << it->second << endl;
         }
         return "Balance retrieved successfully.";
-    }else{
+    }
+    else
+    {
         cout << "User not found!!" << endl;
         return "User not found";
     }
 }
 
-
-
-// DONE 
-std::string OrderBook::getQuote(int qty) {
+// DONE
+std::string OrderBook::getQuote(int qty)
+{
     // Implementation of getQuote
     // We will need to find lowest ask prices till the qty passed in is met we keep displaying lowest ask prices
 
-    std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
-        return a.price < b.price;
-    }); // sorts asks in increasing order of price
+    std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
+              { return a.price < b.price; }); // sorts asks in increasing order of price
 
-    for(auto it = asks.begin(); it != asks.end(); ++it){
-        if(qty > 0 && qty <= it->quantity){
-            cout << TICKER << "-> " << "Quantity available: " << qty << " at " << it->price << " USD" << endl; // make the output look better 
-           
+    for (auto it = asks.begin(); it != asks.end(); ++it)
+    {
+        if (qty > 0 && qty <= it->quantity)
+        {
+            cout << TICKER << "-> "
+                 << "Quantity available: " << qty << " at " << it->price << " USD" << endl; // make the output look better
+
             return "Quote retrieved successfully.";
-        }else if (qty > 0 && qty > it->quantity){
-            cout << TICKER << "-> " << "Quantity available: " << it->quantity << " at " << it->price << " USD" <<  endl;
+        }
+        else if (qty > 0 && qty > it->quantity)
+        {
+            cout << TICKER << "-> "
+                 << "Quantity available: " << it->quantity << " at " << it->price << " USD" << endl;
             qty -= it->quantity;
-    }else {
-        
-        return "Quote retrieved successfully.";
-    }
-   
-}
-    cout << "Quote retrieved successfully." << endl; 
-    return "Quote retrieved successfully."; 
-}
+        }
+        else
+        {
 
+            return "Quote retrieved successfully.";
+        }
+    }
+    cout << "Quote retrieved successfully." << endl;
+    return "Quote retrieved successfully.";
+}
 
 // DONE
-std::string OrderBook::getDepth() {
+std::string OrderBook::getDepth()
+{
     // Sort asks in descending order of price
-    std::sort(asks.begin(), asks.end(), [](const Order& a, const Order& b) {
-        return a.price > b.price;
-    });
+    std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
+              { return a.price > b.price; });
 
     // Sort bids in descending order of price
-    std::sort(bids.begin(), bids.end(), [](const Order& a, const Order& b) {
-        return a.price > b.price;
-    });
-    std:: string depthString = TICKER + " Depth:\n";
+    std::sort(bids.begin(), bids.end(), [](const Order &a, const Order &b)
+              { return a.price > b.price; });
+    std::string depthString = TICKER + " Depth:\n";
     // Construct a string representation of the depth
-    
-    for (const auto& ask : asks) {
-        depthString += "\x1b[31m";  // Set color to red
+
+    for (const auto &ask : asks)
+    {
+        depthString += "\x1b[31m"; // Set color to red
         depthString += "Price: " + std::to_string(ask.price) + ", Quantity: " + std::to_string(ask.quantity) + "\n";
-        depthString += "\x1b[0m";   // Reset color to default
+        depthString += "\x1b[0m"; // Reset color to default
     }
     depthString += "Asks above:\n";
     depthString += "Bids below:\n";
-    for (const auto& bid : bids) {
-        depthString += "\x1b[32m";  // Set color to green
+    for (const auto &bid : bids)
+    {
+        depthString += "\x1b[32m"; // Set color to green
         depthString += "Price: " + std::to_string(bid.price) + ", Quantity: " + std::to_string(bid.quantity) + "\n";
-        depthString += "\x1b[0m";   // Reset color to default
+        depthString += "\x1b[0m"; // Reset color to default
     }
 
     cout << depthString << endl;
     return depthString;
 }
 
-std:: string OrderBook :: addBalanace(std:: string Username, std:: string market, int value){
-    if(users.find(Username) != users.end()){
+std::string OrderBook ::addBalanace(std::string Username, std::string market, int value)
+{
+    if (users.find(Username) != users.end())
+    {
         users[Username].user_balance.addBalance(market, value);
         cout << "Balance added successfully" << endl;
         return "Balance added successfully";
@@ -303,17 +335,14 @@ std:: string OrderBook :: addBalanace(std:: string Username, std:: string market
     return "User not found";
 }
 
-OrderBook::~OrderBook() {
+OrderBook::~OrderBook()
+{
     // Implementation of the destructor, if needed
     // For example, you might need to release any allocated resources here
 }
 
-
-
-
-
-
-int main() {
+int main()
+{
     OrderBook EXCH;
 
     std::string market;
@@ -321,81 +350,81 @@ int main() {
     std::string username;
     int price, quantity;
 
-    cout << "Current Market for " << TICKER << " is as follows: " << endl;
+    cout << "\n=========== " <<"WELCOME TO THE " << TICKER << " MARKET "  << "AND HAPPY TRADING" << " =========== \n\n" << endl;
+    cout << "\n=========== " << "CURRENT MARKET PRICES " << " =========== " << endl;
     EXCH.getDepth(); // getDepth() is called to display the current market
 
+    while (true)
+    {
+        cout << "\n=========== " << TICKER << " Trading Platform ===========\n\n";
+        cout << "\n========== Trading Platform Menu ==========\n";
+        cout << "1. Sign Up User\n";
+        cout << "2. Add Balance to User Account\n";
+        cout << "3. Check Current Market Prices\n";
+        cout << "4. Add Bid to " << TICKER << " v USD market\n";
+        cout << "5. Sell your stocks in " << TICKER << " V USD Market\n";
+        cout << "6. Get Current Quote to buy " << TICKER << " stocks\n";
+        cout << "7. Check your current User Balance\n";
+        cout << "8. Exit\n\n";
+        cout << "Enter your choice: ";
 
-    while (true) {
-        std::cout << "\n========== Trading Platform Menu ==========\n";
-        std::cout << "1. Sign Up User\n";
-        std::cout << "2. Add Balance to User Account \n";
-        std::cout << "3. Check Current Market Prices \n";
-        std::cout << "4. Add Bid to GOOGL v USD market \n";
-        std::cout << "5. Sell your stocks in GOOGLE V USD Market \n";
-        std::cout << "6. Get Current Quote to buy GOOGL stocks\n";
-        std::cout << "7. Check your current User Balance \n";
-        std::cout << "8. Exit\n";
-        std::cout << "===========================================\n";
-
-        std::cout << "Enter your choice: ";
         std::cin >> choice;
 
-        switch (choice) {
-            case 1:
-                std::cout << "Enter username for new user: ";
-                std::cin >> username;
-                EXCH.makeUser(username);
-                break;
-            case 2:
-                std::cout << "Enter username to add balance: ";
-                std::cin >> username;
-                std::cout << "Enter market (e.g., USD): ";
-                std::cin >> market;
-                std::cout << "Enter balance value: ";
-                int value;
-                std::cin >> value;
-                EXCH.addBalanace(username, market, value);
-                break;
-            case 3:
-                EXCH.getDepth();
-                break;
-            case 4:
-                std::cout << "Enter username for bid: ";
-                std::cin >> username;
-                std::cout << "Enter bid price: ";
-                std::cin >> price;
-                std::cout << "Enter bid quantity: ";
-                std::cin >> quantity;
-                EXCH.add_bid(username, price, quantity);
-                break;
-            case 5:
-                std::cout << "Enter username for ask: ";
-                std::cin >> username;
-                std::cout << "Enter ask price: ";
-                std::cin >> price;
-                std::cout << "Enter ask quantity: ";
-                std::cin >> quantity;
-                EXCH.add_ask(username, price, quantity);
-                break;
-            case 6:
-                std::cout << "Enter quantity for quote: ";
-                std::cin >> quantity;
-                EXCH.getQuote(quantity);
-                break;
-            case 7:
-                std::cout << "Enter username to get balance: ";
-                std:: cin >> username;
-                EXCH.getBalance(username);
-                break;
-            case 8:
-                std::cout << "Exiting the trading platform. Goodbye!\n";
-                return 0;
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
+        switch (choice)
+        {
+        case 1:
+            std::cout << "Enter username for new user: \n";
+            std::cin >> username;
+            EXCH.makeUser(username);
+            break;
+        case 2:
+            std::cout << "Enter username to add balance: \n";
+            std::cin >> username;
+            std::cout << "Enter market (e.g., USD): \n";
+            std::cin >> market;
+            std::cout << "Enter balance value: \n";
+            int value;
+            std::cin >> value;
+            EXCH.addBalanace(username, market, value);
+            break;
+        case 3:
+            EXCH.getDepth();
+            break;
+        case 4:
+            std::cout << "Enter username for bid: \n";
+            std::cin >> username;
+            std::cout << "Enter bid price: \n";
+            std::cin >> price;
+            std::cout << "Enter bid quantity: \n";
+            std::cin >> quantity;
+            EXCH.add_bid(username, price, quantity);
+            break;
+        case 5:
+            std::cout << "Enter username for ask: \n";
+            std::cin >> username;
+            std::cout << "Enter ask price: \n";
+            std::cin >> price;
+            std::cout << "Enter ask quantity: \n";
+            std::cin >> quantity;
+            EXCH.add_ask(username, price, quantity);
+            break;
+        case 6:
+            std::cout << "Enter quantity for quote: \n";
+            std::cin >> quantity;
+            EXCH.getQuote(quantity);
+            break;
+        case 7:
+            std::cout << "Enter username to get balance: \n";
+            std::cin >> username;
+            EXCH.getBalance(username);
+            break;
+        case 8:
+            std::cout << "Exiting the trading platform. Goodbye!\n\n";
+            return 0;
+        default:
+            std::cout << "Invalid choice. Please try again.\n\n";
         }
     }
 
     return 0;
 }
-
-
