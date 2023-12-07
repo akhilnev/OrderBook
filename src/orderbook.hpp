@@ -12,7 +12,7 @@ std :: string TICKER = "GOOGL"; // ticker for the stock we are trading
 struct Balances{
     std:: unordered_map <std :: string,int> balance; // STORES USD : VALUE, GOOGE : VALUE 
     Balances(){
-        balance["USD"] = 1000;
+        balance["USD"] = 0;
         balance[TICKER] = 0;
     }
     Balances(std:: string market , int value){
@@ -36,7 +36,7 @@ struct User{
     Balances user_balance;
 
     User(){};
-    
+
     User(std::string Username, Balances b){
         user_name = Username;
         user_balance = b;
@@ -83,6 +83,7 @@ private:
     std:: string getQuote(int qty); // returns the best bid and ask prices and quantities
     std:: string getDepth(); // returns the entire order book and shows all bids and asks
     std:: string makeUser(std:: string); // creates a new user for people trying to join the market
+    std:: string addBalanace(std:: string Username, std:: string market, int value); // adds balance to a user
 
 };
 
