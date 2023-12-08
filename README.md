@@ -43,10 +43,11 @@ The OrderBook is a C++ implementation of a financial order book, focusing on a s
 
 ## How to Run
 
-```bash
+```bash 
 make        # Compile the program
 ./orderbook # Run the compiled executable
 make clean  # Remove the executable
+```
 
 ## Trading Platform Menu Options
 
