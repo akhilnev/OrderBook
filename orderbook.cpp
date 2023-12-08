@@ -4,6 +4,7 @@
 #include "orderbook.hpp"
 #include <iostream>
 #include <iomanip> // For setw() and setfill()
+#include <algorithm>
 
 using namespace std;
 
