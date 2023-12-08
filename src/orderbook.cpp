@@ -1,4 +1,5 @@
 // OrderBook.cpp
+// USES THE FIFO ORDER MATCHING ALGORITHM - FIRST IN FIRST OUT
 
 #include "orderbook.hpp"
 #include <iostream>
@@ -339,6 +340,56 @@ OrderBook::~OrderBook()
 {
     // Implementation of the destructor, if needed
     // For example, you might need to release any allocated resources here
+}
+
+// SIMILARLY I WILL IMPLEMENT cancelAsk() function
+
+void OrderBook :: cancelAsk(std:: string Username, int Price, int Quantity){
+
+    // I need to go through the asks array and find the ask with the same price and quantity and then delete it from the array placed by the same User
+    for(auto it = asks.begin() ; it!=asks.end(); ++it){
+        if(it->user_name == Username && it->price == Price && it->quantity == Quantity){
+            asks.erase(it);
+            cout << "Ask cancelled successfully" << endl;
+            return;
+        }else if (it->user_name == Username && it->price == Price && it->quantity > Quantity){
+            it->quantity -= Quantity;
+            cout << "Ask cancelled successfully" << endl;
+            return;
+        }else if(it->user_name == Username && it->price == Price && it->quantity < Quantity){
+            cout << "Ask quantity is less than the quantity you want to cancel\n\n";
+            cout << "Please enter the right quantity to cancel and retry!\n\n";
+            return;
+            // RETHINK MAYBE - I will not return I will continue search as maybe some other order was placed by the same user with the same price and quantity
+
+        }   
+    }
+
+}
+
+void OrderBook :: cancelBid(std:: string Username, int Price, int Quantity){
+
+
+    // I need to go through the bids array and find the bid with the same price and quantity and then delete it from the array placed by the same User 
+    for(auto it = bids.begin(); it != bids.end(); ++it){
+        if(it->user_name == Username && it->price == Price && it->quantity == Quantity){
+            bids.erase(it);
+            cout << "Bid cancelled successfully" << endl;
+            return;
+        }else if (it->user_name == Username && it->price == Price && it->quantity > Quantity){
+            it->quantity -= Quantity;
+            cout << "Bid cancelled successfully" << endl;
+            return;
+        }else if(it->user_name == Username && it->price == Price && it->quantity < Quantity){
+            cout << "Bid quantity is less than the quantity you want to cancel\n\n";
+            cout << "Please enter the right quantity to cancel and retry!\n\n";
+            return;
+            // RETHINK MAYBE - I will not return I will continue search as maybe some other order was placed by the same user with the same price and quantity
+
+        }   
+    }
+    cout << "Bid not found!! Please enter the right Username, Price and Quantity to cancel the bid!" << endl;
+    return;
 }
 
 int main()

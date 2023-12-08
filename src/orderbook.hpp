@@ -69,14 +69,14 @@ struct Order{
 class OrderBook{
 private:
 
-    std :: vector<Order> bids;
-    std :: vector<Order> asks;
-    std :: unordered_map <std :: string,User> users; // stores unique user name and balances for each user
+    std :: vector<Order> bids; // stores all bids in order of price and time --> O(n) lookup
+    std :: vector<Order> asks; // stores all asks in order of price and time --> O(n) lookup
+    std :: unordered_map <std :: string,User> users; // stores unique user name and balances for each user --> O(1) lookup no need to be in order 
     void flipBalance(const std::string& userId1, const std::string& userId2, double quantity, double price);
 
     public:
     OrderBook(); // constructor
-   ~OrderBook(); // destructor
+   ~OrderBook(); // destructor 
     std:: string add_bid(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
     std:: string add_ask(std :: string Username, int Price, int Quantity); // adds a bid or ask to the order book
     std:: string getBalance(std::string username); // returns the balance of a user
@@ -84,6 +84,8 @@ private:
     std:: string getDepth(); // returns the entire order book and shows all bids and asks
     std:: string makeUser(std:: string); // creates a new user for people trying to join the market
     std:: string addBalanace(std:: string Username, std:: string market, int value); // adds balance to a user
+    void cancelBid(std:: string Username, int Price, int Quantity); // cancels a bid or ask from the order book
+    void cancelAsk(std:: string Username, int Price, int Quantity); // cancels a bid or ask from the order book
 
 };
 
