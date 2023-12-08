@@ -7,7 +7,8 @@
 - Market makers are initialized with predefined balances and bids/asks, akin to NPC characters in a game.
 - To run the program, use `make`, and to clean executables, use `make clean`.
 
-**Quick Demo:** [Click here](https://drive.google.com/file/d/1zWtscQt6ctCLNztfaFNNnSa45gWUYk_r/view?usp=share_link) <!-- Provide the link to your demo here -->
+**Quick Demo:** [Click here](https://drive.google.com/file/d/1zWtscQt6ctCLNztfaFNNnSa45gWUYk_r/view?usp=share_link) 
+**Better Looking Readme** [Github_Link](https://github.com/akhilnev/OrderBook/)
 
 ## Working of the OrderBook
 
