@@ -1,6 +1,6 @@
 # OrderBook
 
-## Notes to TA:
+## Notes:
 
 - I have implemented an Orderbook in C++ which uses the FIFO order matching algorithm!
 - The orderbook is currently designed for the GOOGL v USD market to simplify bids and asks.
