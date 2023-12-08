@@ -96,43 +96,7 @@ std::string OrderBook ::makeUser(std::string Username)
     return "User created successfully";
 }
 
-// REFFERENCE FUNCTION TO FILL ORDERS !
-//  function fillOrders(side: string, price: number, quantity: number, userId: string): number {
-//    let remainingQuantity = quantity;
-//    if (side === "bid") {
-//      for (let i = asks.length - 1; i >= 0; i--) {
-//        if (asks[i].price > price) {
-//          continue;
-//        }
-//        if (asks[i].quantity > remainingQuantity) {
-//          asks[i].quantity -= remainingQuantity;
-//          flipBalance(asks[i].userId, userId, remainingQuantity, asks[i].price);
-//          return 0;
-//        } else {
-//          remainingQuantity -= asks[i].quantity;
-//          flipBalance(asks[i].userId, userId, asks[i].quantity, asks[i].price);
-//          asks.pop();
-//        }
-//      }
-//    } else {
-//      for (let i = bids.length - 1; i >= 0; i--) {
-//        if (bids[i].price < price) {
-//          continue;
-//        }
-//        if (bids[i].quantity > remainingQuantity) {
-//          bids[i].quantity -= remainingQuantity;
-//          flipBalance(userId, bids[i].userId, remainingQuantity, price);
-//          return 0;
-//        } else {
-//          remainingQuantity -= bids[i].quantity;
-//          flipBalance(userId, bids[i].userId, bids[i].quantity, price);
-//          bids.pop();
-//        }
-//      }
-//    }
 
-//   return remainingQuantity;
-// }
 
 std::string OrderBook::add_bid(std ::string Username, int Price, int Quantity)
 {
