@@ -55,11 +55,21 @@ struct Order{
     std :: string side;
     int price;
     int quantity;
+    static int order_counter_bid; // Declare a static counter to keep track of the order number
+    static int order_counter_ask; // Declare a static counter to keep track of the order number
+    int insertion_order_bid; // order in which the order was inserted into the order book
+    int insertion_order_ask; // order in which the order was inserted into the order book
     Order(std::string Username, std::string Side, int Price, int Quantity){
         user_name = Username;
         side = Side;
         price = Price;
         quantity = Quantity;
+        if(side == "bid"){
+            insertion_order_bid = order_counter_bid++;
+        }
+        else{
+            insertion_order_ask = order_counter_ask++;
+        }
     }
 };
 

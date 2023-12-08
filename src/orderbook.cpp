@@ -7,6 +7,9 @@
 
 using namespace std;
 
+int Order::order_counter_bid = 0;
+int Order::order_counter_ask = 0;
+
 // BIDDER , ASKER ,  QUANTITY, PRICE
 void OrderBook::flipBalance(const std::string &userId1, const std::string &userId2, double quantity, double price)
 {
@@ -138,8 +141,19 @@ std::string OrderBook::add_bid(std ::string Username, int Price, int Quantity)
     // we add the remaining quantity to the bids array else we return a message saying Bid Satisfied Successfully
     int remQty = Quantity;
     // sort asks in ascending order of price
-    std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
-              { return a.price < b.price; });
+    // std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
+    //           { return a.price < b.price; });
+
+    // TO MAINTAIN THE ORDER OF INSERTION AND FIFO ORDER MATCHING
+    std::stable_sort(asks.begin(), asks.end(), [](const Order &a, const Order &b) {
+    // If prices are equal, maintain the original order
+    if (a.price == b.price) {
+        // Compare based on the order of insertion
+        return a.insertion_order_ask < b.insertion_order_ask;
+    }
+    // Otherwise, sort by price
+    return a.price < b.price;
+});
 
     // use logic from the commented function above
     for (auto it = asks.begin(); it != asks.end(); /* no increment here */)
@@ -191,8 +205,19 @@ std::string OrderBook::add_ask(std ::string Username, int Price, int Quantity)
 
     int remQty = Quantity;
     // sort bids in descending order of price
-    std::sort(bids.begin(), bids.end(), [](const Order &a, const Order &b)
-              { return a.price > b.price; });
+    // std::sort(bids.begin(), bids.end(), [](const Order &a, const Order &b)
+    //           { return a.price > b.price; });
+
+    // TO MAINTAIN FIFO ORDER OF INSERTION
+    std::stable_sort(bids.begin(), bids.end(), [](const Order &a, const Order &b) {
+    // If prices are equal, maintain the original order
+    if (a.price == b.price) {
+        // Compare based on the order of insertion
+        return a.insertion_order_bid < b.insertion_order_bid;
+    }
+    // Otherwise, sort by price
+    return a.price > b.price;
+});
 
     // use logic from the commented function above
     for (auto it = bids.begin(); it != bids.end(); /* no increment here */)
@@ -264,8 +289,15 @@ std::string OrderBook::getQuote(int qty)
     // Implementation of getQuote
     // We will need to find lowest ask prices till the qty passed in is met we keep displaying lowest ask prices
 
-    std::sort(asks.begin(), asks.end(), [](const Order &a, const Order &b)
-              { return a.price < b.price; }); // sorts asks in increasing order of price
+    std::stable_sort(asks.begin(), asks.end(), [](const Order &a, const Order &b) {
+    // If prices are equal, maintain the original order
+    if (a.price == b.price) {
+        // Compare based on the order of insertion
+        return a.insertion_order_ask < b.insertion_order_ask;
+    }
+    // Otherwise, sort by price
+    return a.price < b.price;
+});
 
     for (auto it = asks.begin(); it != asks.end(); ++it)
     {
@@ -413,10 +445,12 @@ int main()
         cout << "2. Add Balance to User Account\n";
         cout << "3. Check Current Market Prices\n";
         cout << "4. Add Bid to " << TICKER << " v USD market\n";
-        cout << "5. Sell your stocks in " << TICKER << " V USD Market\n";
+        cout << "5. Sell your stocks in " << TICKER << " v USD Market\n";
         cout << "6. Get Current Quote to buy " << TICKER << " stocks\n";
         cout << "7. Check your current User Balance\n";
-        cout << "8. Exit\n\n";
+        cout << "8. Cancel Bid\n";
+        cout << "9. Cancel Ask\n";
+        cout << "10. Exit\n\n";
         cout << "Enter your choice: ";
 
         std::cin >> choice;
@@ -470,6 +504,24 @@ int main()
             EXCH.getBalance(username);
             break;
         case 8:
+            std::cout << "Enter username to cancel bid: \n";
+            std::cin >> username;
+            std::cout << "Enter bid price: \n";
+            std::cin >> price;
+            std::cout << "Enter bid quantity: \n";
+            std::cin >> quantity;
+            EXCH.cancelBid(username, price, quantity);
+            break;
+        case 9:
+            std::cout << "Enter username to cancel ask: \n";
+            std::cin >> username;
+            std::cout << "Enter ask price: \n";
+            std::cin >> price;
+            std::cout << "Enter ask quantity: \n";
+            std::cin >> quantity;
+            EXCH.cancelAsk(username, price, quantity);
+            break;
+        case 10:
             std::cout << "Exiting the trading platform. Goodbye!\n\n";
             return 0;
         default:
