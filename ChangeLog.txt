@@ -1,0 +1,107 @@
+commit 1b5ee32a9352ea6e8f7295213abe13203fe9fbf3
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 20:41:59 2023 -0600
+
+     Adding orderbook changes
+
+commit ea86e433c3e2d0bb6317261065fbe5526bd8fd64
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 20:32:14 2023 -0600
+
+     Refining changes and adding demo
+
+commit 65ac29161ec62d60d415af77650984145c9b4007
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 19:30:21 2023 -0600
+
+     Refining readme
+
+commit 080bfefa482a394ee12cb284762750e12d767afe
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 19:29:20 2023 -0600
+
+     Refining readme
+
+commit 9edd90831457fbc58c307c1ee031c29c9b468161
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 19:25:05 2023 -0600
+
+     Modifying Readme.md :
+
+commit 26fdc4af5f704a1dcfc0ae0b91da853707d511ad
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 19:19:03 2023 -0600
+
+     Adding README and modifying structure
+
+commit 75a1e22e61a6a93d243977a73aa8b02d77e2c3d7
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 19:02:37 2023 -0600
+
+     Adding insertion order matching techniques to make sure FIFO is followed!
+
+commit 91d4ba692b1a54a0b267f1f1b50683f6fba716d0
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 18:26:15 2023 -0600
+
+     Adding cancel order and cancel ask methods
+
+commit 4eaf62bdb76114879553e3991bfd4c79a3b47327
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Thu Dec 7 14:46:02 2023 -0600
+
+     Making main look a little neater :
+
+commit 746e50b5a904ab306d77928ea9954ab6bbe9e507
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 20:03:40 2023 -0600
+
+     Adding final working version to document and testing it on the console
+
+commit 35542ecb0f9b452957b08cb820d476bb6466dc38
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 04:32:15 2023 -0600
+
+     got basic to compile main console code and UI left
+
+commit 3600846c1a03fa95a1e84b1499568ee05c452488
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 01:58:29 2023 -0600
+
+     Add bid and add ask methods to be done and then testing and playing around is left
+
+commit 7eba3bf63c5af353bbb4d8a1707b5b400f83910d
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 01:35:07 2023 -0600
+
+     Adding the orderbook display method
+
+commit 7ecca8ef962be38156c7a3bf98a67087abb8f966
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 01:18:29 2023 -0600
+
+     Adding orderbook GET methods implemented in the cpp file with market makers to provide initial liquidity
+
+commit 7372f066772c8f8fd137b09f70eb82b2afe9a099
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Dec 6 00:07:42 2023 -0600
+
+     Adding header file implementation and including it in the cpp file
+
+commit 9e7a87367cbfd9ec69e57e9681e3c34538c9e8e0
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Tue Dec 5 23:23:16 2023 -0600
+
+     Adding changes to my simple C++ orderbook clone
+
+commit 74bc1937a23f6f326c332af8c5537f78dfbcd2ad
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Wed Nov 29 22:28:56 2023 -0600
+
+     Adding config files
+
+commit 05f60a88669bfa922e6f81443883a0c669dda2b3
+Author: Akhilesh Nevatia <106297042+akhilnev@users.noreply.github.com>
+Date:   Wed Nov 29 21:48:38 2023 -0600
+
+    Initial commit
