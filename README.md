@@ -53,6 +53,8 @@ make clean  # Remove the executable
 
 ## Trading Platform Menu Options
 
+![Trading Platform Screenshot](Trading_Platform.png)
+
 1. **Sign Up User (`1`):**
    - Creates a new user with a specified username.
 
